@@ -1,3 +1,7 @@
+# Max added
+data/*
+*-checkpoint.ipynb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

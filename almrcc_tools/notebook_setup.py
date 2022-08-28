@@ -24,27 +24,32 @@ if not LOCAL:
             load_dotenv(
                 stream=StringIO(
                     self._get_bucket("kale-dataproc-notebook")
-                    .blob("shared/max/.env")  # TODO: don't hardcode this
+                    .blob("max/.env")  # TODO: don't hardcode this
                     .download_as_string()
                     .decode()
                 )
             )
 
+        @staticmethod
+        def _get_bucket_n_blob(file_path: str) -> tuple:
+            bucket, file_name = os.path.split(file_path[::-1])
+            return bucket[::-1], file_name[::-1]
+
         def _get_bucket(self, bucket_name):
             return self._client.get_bucket(bucket_name)
 
         def get_file(self, file_path: str) -> bytes:
-            bucket, file_name = os.path.split(file_path)
+            bucket, file_name = self._get_bucket_n_blob(file_path)
             blob = self._get_bucket(bucket).blob(file_name)
             return blob.download_as_bytes()
 
         def _walk_folder(self, folder_path: str) -> list:
-            bucket, folder_name = os.path.split(folder_path)
+            bucket, folder_name = self._get_bucket_n_blob(folder_path)
             blobs = self._get_bucket(bucket).list_blobs(prefix=folder_name)
             return [blob.name for blob in blobs]
 
         def _write_file(self, file_path: str, content: bytes):
-            bucket, file_name = os.path.split(file_path)
+            bucket, file_name = self._get_bucket_n_blob(file_path)
             self._get_bucket(bucket).blob(file_name).upload_from_file(content, rewind=True)
 
 else:

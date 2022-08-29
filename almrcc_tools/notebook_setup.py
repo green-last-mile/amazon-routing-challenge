@@ -24,7 +24,7 @@ if not LOCAL:
             load_dotenv(
                 stream=StringIO(
                     self._get_bucket("kale-dataproc-notebook")
-                    .blob("max/.env")  # TODO: don't hardcode this
+                    .blob("shared/max/.env")  # TODO: don't hardcode this
                     .download_as_string()
                     .decode()
                 )
@@ -32,7 +32,7 @@ if not LOCAL:
 
         @staticmethod
         def _get_bucket_n_blob(file_path: str) -> tuple:
-            bucket, file_name = os.path.split(file_path[::-1])
+            file_name, bucket = os.path.split(file_path[::-1])
             return bucket[::-1], file_name[::-1]
 
         def _get_bucket(self, bucket_name):

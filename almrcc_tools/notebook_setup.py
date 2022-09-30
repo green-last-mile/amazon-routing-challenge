@@ -67,7 +67,7 @@ else:
         @staticmethod
         def _find_root(path):
             if os.path.split(path)[-1] != "amazon-routing-challenge":
-                return _Base.find_root(os.path.split(path)[0])
+                return _Base._find_root(os.path.split(path)[0])
             return path
 
         def get_file(self, file_path: str) -> bytes:
